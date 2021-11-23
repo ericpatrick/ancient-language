@@ -1,42 +1,14 @@
-const vowels = ["a", "e", "i", "o", "u", "y"]
+import * as readline from "readline";
+import { stdin as input, stdout as output } from "process";
 
-const translate = (englishText: string): string => {
-  const englishWords = englishText.split(" ")
-  const resultArr = []
+import { translateToAncientUseCase } from "./useCases/translateToAncient/index";
 
-  for (let engWord of englishWords) {
-    let prefixIndex = engWord.length
-    for (let i = 0; i < engWord.length; i++) {
-      if (vowels.includes(engWord[i])) {
-        prefixIndex = i
-        break
-      }
-    }
+const rl = readline.createInterface({ input, output });
 
-    const regex = new RegExp(/[\w]$/)
-    const hasMatch = regex.test(engWord)
-    let pontuaction = null
+rl.question("What's the english text: ", (answer: string) => {
+  const ancient = translateToAncientUseCase.execute(answer);
 
-    if (!hasMatch) {
-      pontuaction = engWord[engWord.length - 1]
-      const engWordWiouthPontuctuation = engWord.substring(
-        0,
-        engWord.length - 2
-      )
-    }
+  console.log(ancient);
 
-    const engWordClone = engWord
-    const prefix = engWord.substring(0, prefixIndex)
-    const sten = engWord.substring(prefixIndex, engWord.length)
-
-    let ancientWord = `${sten}${prefix}ay`
-
-    if (pontuaction) ancientWord += pontuaction
-
-    resultArr.push(ancientWord)
-  }
-
-  return resultArr.join("")
-}
-
-console.log(translate("Stop"))
+  rl.close();
+});
